@@ -4,6 +4,7 @@
  * See https://github.com/jakesgordon/javascript-state-machine
  * for the document of the StateMachine module.
  */
+var w, s;
 var Controller = StateMachine.create({
     initial: 'none',
     events: [
@@ -77,21 +78,21 @@ var Controller = StateMachine.create({
             from: ['ready','finished'],
             to:   'drawingWall'
         },
-       /* {
+        {
             name: 'eraseWall',
             from: ['ready', 'finished'],
             to:   'erasingWall'
-        },*/
+        },
         {
             name: 'drawStop',
             from: ['ready','finished'],
             to:   'drawingStop'
         },
-        /*{
+        {
             name: 'eraseStop',
             from: ['ready', 'finished'],
             to:   'erasingStop'
-        },*/
+        },
         {
             name: 'rest',
             from: ['draggingStart', 'draggingEnd','drawingWall','drawingStop','erasingWall','erasingStop'],
@@ -140,11 +141,11 @@ $.extend(Controller, {
     },
     ondrawStop: function(event, from, to, gridX, gridY) {
         this.setNstopAt(gridX, gridY, false);
-        // => drawingWall
+        // => drawingStop
     },
     oneraseStop: function(event, from, to, gridX, gridY) {
         this.setNstopAt(gridX, gridY, true);
-        // => erasingWall
+        // => erasingStop
     },
     onsearch: function(event, from, to) {
         var grid,
@@ -238,14 +239,24 @@ $.extend(Controller, {
             id: 4,
             text: 'Draw Walls',
             enabled: true,
-            callback: $.proxy(this.drawWall,this)
+            callback: $.proxy(this.willdrawWall,this),
         },{
             id: 5,
             text: 'Draw Stops',
             enabled: true,
-            callback: $.proxy(this.drawStop,this)
+            callback: $.proxy(this.willdrawStop,this),
         });
         // => [starting, draggingStart, draggingEnd, drawingStart, drawingEnd]
+    },
+    willdrawWall: function () {
+        w = 1;
+        s = 0;
+        console.log('drawWall');
+    },
+    willdrawStop: function () {
+        w = 0;
+        s = 1;
+        console.log('drawStop');
     },
     onstarting: function(event, from, to) {
         console.log('=> starting');
@@ -418,21 +429,30 @@ $.extend(Controller, {
 
         if (this.can('dragStart') && this.isStartPos(gridX, gridY)) {
             this.dragStart();
+            console.log('dragstart');
             return;
         }
         if (this.can('dragEnd') && this.isEndPos(gridX, gridY)) {
             this.dragEnd();
             return;
         }
-        /*if (this.can('drawWall') && grid.isWalkableAt(gridX, gridY)) {
+        if (this.can('drawWall') && grid.isWalkableAt(gridX, gridY) && w && grid.isNstopAt(gridX,gridY)) {
             this.drawWall(gridX, gridY);
             return;
         }
+        if (this.can('eraseWall') && !grid.isWalkableAt(gridX, gridY) && w) {
+            this.eraseWall(gridX, gridY);
+            return;
+        }
         
-        if (this.can('drawStop') && grid.isNstopAt(gridX, gridY)) {
+        if (this.can('drawStop') && grid.isNstopAt(gridX, gridY) && s && grid.isWalkableAt(gridX,gridY)) {
             this.drawStop(gridX, gridY);
             return;
-        }*/
+        }
+        if (this.can('eraseStop') && !grid.isNstopAt(gridX, gridY) && s) {
+            this.eraseStop(gridX, gridY);
+            return;
+        }
         
     },
     mousemove: function(event) {
@@ -449,6 +469,7 @@ $.extend(Controller, {
         case 'draggingStart':
             if (grid.isWalkableAt(gridX, gridY)) {
                 this.setStartPos(gridX, gridY);
+                console.log('draggingstart');
             }
             break;
         case 'draggingEnd':
@@ -460,16 +481,16 @@ $.extend(Controller, {
         case 'drawingWall':
             this.setWalkableAt(gridX, gridY, false);
             break;
-        /*case 'erasingWall':
+        case 'erasingWall':
             this.setWalkableAt(gridX, gridY, true);
-            break;*/
+            break;
         
         case 'drawingStop':
             this.setNstopAt(gridX, gridY, false);
             break;
-       /* case 'erasingStop':
+        case 'erasingStop':
             this.setNstopAt(gridX, gridY, true);
-            break;*/
+            break;
         }
     },
     mouseup: function(event) {
@@ -525,6 +546,7 @@ $.extend(Controller, {
         this.startX = gridX;
         this.startY = gridY;
         View.setStartPos(gridX, gridY);
+        console.log('setstart');
     },
     setEndPos: function(gridX, gridY) {
         this.endX = gridX;
@@ -541,6 +563,7 @@ $.extend(Controller, {
     },
     isStartPos: function(gridX, gridY) {
         return gridX === this.startX && gridY === this.startY;
+        console.log('isstart');
     },
     isEndPos: function(gridX, gridY) {
         return gridX === this.endX && gridY === this.endY;
