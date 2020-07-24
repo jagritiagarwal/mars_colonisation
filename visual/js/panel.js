@@ -98,32 +98,26 @@ var Panel = {
             mutiple_visitation = typeof $('#breadthfirst_section ' +
                                      '.multiple_visitation:checked').val() !=='undefined';
              if (biDirectional) {
-                if(closest_destination){
-                    debugger;
-                    finder=new PF.BreadthFirstFinder({
-                        allowDiagonal: allowDiagonal,
-                        dontCrossCorners: dontCrossCorners});
-                }
-                else {
+                
                 finder = new PF.BreadthFirstFinder({
                     allowDiagonal: allowDiagonal,
                     dontCrossCorners: dontCrossCorners
-                });}
+                });
             } else {
                 if(closest_destination){
-                    finder=new PF.Multi1({
+                    finder=new PF.closest_destination_bfs({
                         allowDiagonal: allowDiagonal,
                         dontCrossCorners: dontCrossCorners});
                 }
 
                 
                 else  if(multiple_stop){
-                finder = new PF.Multi3({
+                finder = new PF.multiple_stop_bfs({
                     allowDiagonal: allowDiagonal,
                     dontCrossCorners: dontCrossCorners
                 });}
                 else{
-                    finder = new PF.Multi2({
+                    finder = new PF.mutiple_visitation_bfs({
                         allowDiagonal: allowDiagonal,
                         dontCrossCorners: dontCrossCorners
                     });
