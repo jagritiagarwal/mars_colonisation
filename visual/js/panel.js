@@ -43,6 +43,10 @@ var Panel = {
                                      '.dont_cross_corners:checked').val() !=='undefined';
             closest_destination = typeof $('#astar_section ' +
                                      '.closest_destination:checked').val() !=='undefined';
+            mutltiple_stop = typeof $('#astar_section ' +
+                                     '.mutltiple_stop:checked').val() !=='undefined';
+            mutiple_visitation = typeof $('#astar_section ' +
+                                     '.mutiple_visitation:checked').val() !=='undefined';                         
             /* parseInt returns NaN (which is false) if the string can't be parsed */
             weight = parseInt($('#astar_section .spinner').val()) || 1;
             weight = weight >= 1 ? weight : 1; /* if negative or 0, use 1 */
@@ -51,7 +55,7 @@ var Panel = {
             if (biDirectional) {
                 if(closest_destination){
                     debugger;
-                    finder=new PF.TraceFinder({allowDiagonal: allowDiagonal,
+                    finder=new PF.Multi1_astar({allowDiagonal: allowDiagonal,
                         dontCrossCorners: dontCrossCorners,
                         heuristic: PF.Heuristic[heuristic],
                         weight: weight});
@@ -65,7 +69,7 @@ var Panel = {
                 });}
             } else {
                 if(closest_destination){
-                    finder=new PF.TraceFinder({allowDiagonal: allowDiagonal,
+                    finder=new PF.Multi1_astar({allowDiagonal: allowDiagonal,
                         dontCrossCorners: dontCrossCorners,
                         heuristic: PF.Heuristic[heuristic],
                         weight: weight});
@@ -114,12 +118,12 @@ var Panel = {
 
                 
                 else  if(multiple_stop){
-                finder = new PF.Multi2({
+                finder = new PF.Multi3({
                     allowDiagonal: allowDiagonal,
                     dontCrossCorners: dontCrossCorners
                 });}
                 else{
-                    finder = new PF.Multi3({
+                    finder = new PF.Multi2({
                         allowDiagonal: allowDiagonal,
                         dontCrossCorners: dontCrossCorners
                     });
