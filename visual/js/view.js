@@ -13,11 +13,10 @@ var View = {
             fill: 'rgba(0, 0, 128, 0.4)',
             'stroke-opacity': 0.5,
         },
-
-        stoped: {
-                fill: 'rgba(255,192,203, 0.4)',
-                'stroke-opacity': 0.5,
-            },
+        stopped: {
+            fill: '#EC1A89',
+            'stroke-opacity': 0.9,
+        },
         start: {
             fill: 'rgba(0, 128, 0, 0.9)',
             'stroke-opacity': 0.2,
@@ -159,9 +158,9 @@ var View = {
             this.setWalkableAt(gridX, gridY, value);
             break;
         case 'Nstop':
-                color = value ? nodeStyle.normal.fill : nodeStyle.stoped.fill;
-                this.setNstopAt(gridX, gridY, value);
-                break;
+            color = value ? nodeStyle.normal.fill : nodeStyle.stopped.fill;
+            this.setNstopAt(gridX, gridY, value);
+            break;
         case 'opened':
             this.colorizeNode(this.rects[gridY][gridX], nodeStyle.opened.fill);
             this.setCoordDirty(gridX, gridY, true);
@@ -234,7 +233,7 @@ var View = {
         }
         node = stopNodes[gridY][gridX];
         if (value) {
-            // clear blocked node
+            // clear stop node
             if (node) {
                 this.colorizeNode(node, this.rects[gridY][gridX].attr('fill'));
                 this.zoomNode(node);
@@ -249,7 +248,7 @@ var View = {
                 return;
             }
             node = stopNodes[gridY][gridX] = this.rects[gridY][gridX].clone();
-            this.colorizeNode(node, this.nodeStyle.stoped.fill);
+            this.colorizeNode(node, this.nodeStyle.stopped.fill);
             this.zoomNode(node);
         }
     },
