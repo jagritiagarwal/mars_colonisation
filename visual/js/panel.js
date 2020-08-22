@@ -1,7 +1,6 @@
 /**
  * The control panel.
  */
-
 var Panel = {
     init: function() {
         var $algo = $('#algorithm_panel');
@@ -16,10 +15,27 @@ var Panel = {
         $('#hide_instructions').click(function() {
             $('#instructions_panel').slideUp();
         });
+        $('#hide_algorithms').click(function() {
+            $('#algorithm_panel').slideUp();
+        });
         $('#play_panel').css({
             top: $algo.offset().top + $algo.outerHeight() + 20
         });
         $('#button2').attr('disabled', 'disabled');
+        $('#hide_instructions').click(function(hide_instructions_clicked) {
+          $('#show_instructions').show();
+        });
+        $('#hide_algorithms').click(function(hide_algorithms_clicked) {
+          $('#show_algorithms').show();
+        });
+        $('#show_algorithms').click(function() {
+            $('#algorithm_panel').slideDown();
+            $('#show_algorithms').hide();
+        });
+        $('#show_instructions').click(function() {
+            $('#instructions_panel').slideDown();
+            $('#show_instructions').hide();
+        });
     },
     /**
      * Get the user selected path-finder.
@@ -43,44 +59,43 @@ var Panel = {
                                      '.dont_cross_corners:checked').val() !=='undefined';
             closest_destination = typeof $('#astar_section ' +
                                      '.closest_destination:checked').val() !=='undefined';
-            mutltiple_stop = typeof $('#astar_section ' +
-                                     '.mutltiple_stop:checked').val() !=='undefined';
-            mutiple_visitation = typeof $('#astar_section ' +
-                                     '.mutiple_visitation:checked').val() !=='undefined';                         
-            /* parseInt returns NaN (which is false) if the string can't be parsed */
-            weight = parseInt($('#astar_section .spinner').val()) || 1;
-            weight = weight >= 1 ? weight : 1; /* if negative or 0, use 1 */
+            multiple_stop = typeof $('#astar_section ' +
+                                     '.multiple_stop:checked').val() !=='undefined';
+            multiple_visitation = typeof $('#astar_section ' +
+                                     '.multiple_visitation:checked').val() !=='undefined'; 
+            standard = typeof $('#astar_section ' +
+                                     '.standard:checked').val() !=='undefined'; 
 
             heuristic = $('input[name=astar_heuristic]:checked').val();
             if (biDirectional) {
-                if(closest_destination){
-                    debugger;
-                    finder=new PF.Multi1_astar({allowDiagonal: allowDiagonal,
-                        dontCrossCorners: dontCrossCorners,
-                        heuristic: PF.Heuristic[heuristic],
-                        weight: weight});
-                }
-                else{
+                
                 finder = new PF.BiAStarFinder({
                     allowDiagonal: allowDiagonal,
-                    dontCrossCorners: dontCrossCorners,
                     heuristic: PF.Heuristic[heuristic],
-                    weight: weight
-                });}
+                });
             } else {
                 if(closest_destination){
-                    finder=new PF.Multi1_astar({allowDiagonal: allowDiagonal,
-                        dontCrossCorners: dontCrossCorners,
+                    finder=new PF.closest_destination_astar({allowDiagonal: allowDiagonal,
+                        heuristic: PF.Heuristic[heuristic],});
+                }
+                else if(multiple_stop){
+                finder = new PF.multiple_stop_astar({
+                    allowDiagonal: allowDiagonal,
+                    heuristic: PF.Heuristic[heuristic],
+                });}
+                else if(multiple_visitation){
+                    finder = new PF.multiple_visitation_astar({
+                        allowDiagonal: allowDiagonal,
                         heuristic: PF.Heuristic[heuristic],
-                        weight: weight});
+                    }); 
                 }
                 else{
-                finder = new PF.AStarFinder({
-                    allowDiagonal: allowDiagonal,
-                    dontCrossCorners: dontCrossCorners,
-                    heuristic: PF.Heuristic[heuristic],
-                    weight: weight
-                });}
+                    finder = new PF.AStarFinder({
+                        allowDiagonal: allowDiagonal,
+                        heuristic: PF.Heuristic[heuristic],
+                    }); 
+
+                }
             }
             break;
 
@@ -95,32 +110,36 @@ var Panel = {
                                      '.closest_destination:checked').val() !=='undefined';
             multiple_stop = typeof $('#breadthfirst_section ' +
                                      '.multiple_stop:checked').val() !=='undefined';
-            mutiple_visitation = typeof $('#breadthfirst_section ' +
+            multiple_visitation = typeof $('#breadthfirst_section ' +
                                      '.multiple_visitation:checked').val() !=='undefined';
+            standard = typeof $('#breadthfirst_section ' +
+                                     '.standard:checked').val() !=='undefined';
              if (biDirectional) {
                 
-                finder = new PF.BreadthFirstFinder({
+                finder = new PF.BiBreadthFirstFinder({
                     allowDiagonal: allowDiagonal,
-                    dontCrossCorners: dontCrossCorners
                 });
             } else {
                 if(closest_destination){
                     finder=new PF.closest_destination_bfs({
-                        allowDiagonal: allowDiagonal,
-                        dontCrossCorners: dontCrossCorners});
+                        allowDiagonal: allowDiagonal,});
                 }
 
                 
                 else  if(multiple_stop){
                 finder = new PF.multiple_stop_bfs({
                     allowDiagonal: allowDiagonal,
-                    dontCrossCorners: dontCrossCorners
                 });}
-                else{
-                    finder = new PF.mutiple_visitation_bfs({
+                else if(multiple_visitation){
+                    finder = new PF.multiple_visitation_bfs({
                         allowDiagonal: allowDiagonal,
-                        dontCrossCorners: dontCrossCorners
                     });
+                }
+                else{
+                    finder = new PF.BreadthFirstFinder({
+                        allowDiagonal: allowDiagonal,
+                        heuristic: PF.Heuristic[heuristic],
+                    }); 
                 }
             }
             break;
@@ -136,12 +155,10 @@ var Panel = {
             if (biDirectional) {
                 finder = new PF.BiDijkstraFinder({
                     allowDiagonal: allowDiagonal,
-                    dontCrossCorners: dontCrossCorners
                 });
             } else {
                 finder = new PF.DijkstraFinder({
                     allowDiagonal: allowDiagonal,
-                    dontCrossCorners: dontCrossCorners
                 });
             }
             break;
