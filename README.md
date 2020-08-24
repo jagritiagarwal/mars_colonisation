@@ -63,21 +63,15 @@ Future Possible Algorithms
 Possible algorithms which can be applied for the functionalities, which we are working on currently-
 1. Floyd Warshall Finder
 
-Medium Articles
----------------
-To read an article on my entire experience with Microsoft Engage 2020, click [here](https://medium.com/@ruthussanketh/mars-colonisation-program-microsoft-bbf8981eae0d).
-
-To read a more detailed article on this project, and the code flow, click [here](https://medium.com/@ruthussanketh/pathfinding-js-in-microsoft-engage-8d6256be3f16).
-
 License
 -------
 Some of the visual code was used from an existing, free, and open repository, whose license has been included below.
 
 [MIT License](http://www.opensource.org/licenses/mit-license.php)
 
-&copy; 2019-2020 Ruthu S Sanketh &lt;jagritiaga123@gmail.com&gt;
+&copy; 2019-2020 Jagriti Agarwal &lt;jagritiaga123@gmail.com&gt;
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, mj  erge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
